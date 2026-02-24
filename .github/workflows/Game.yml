@@ -1,0 +1,27 @@
+on: push
+jobs:
+  Info:
+    runs-on: ubuntu-latest
+    name: 输出信息
+    steps:
+    - name: 输出绝对路径
+      run: pwd
+
+    - name: 引入检出
+      uses: actions/checkout@v6
+
+  Compile:
+    runs-on: ubuntu-latest
+    name: 编译代码
+    steps:
+    - name: 引入检出
+      uses: actions/checkout@v6
+
+    - name: 配置 CMake
+      run: |
+        mkdir -p build  # 添加 -p 参数防止报错
+        cd build
+        cmake ..
+    
+    - name: 编译项目
+      run:  make -j$(nproc)

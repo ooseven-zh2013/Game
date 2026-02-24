@@ -1,0 +1,28 @@
+# 编译输出
+build/
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+*.dSYM
+*.dSYM.zip
+
+# IDE 文件
+*.swp
+*.swo
+*.swn
+*.sublime-workspace
+*.sublime-project
+*.idea/
+*.vscode/
+
+# 临时文件
+*.tmp
+*.log
+*.cache
+
+# CMake缓存
+CMakeCache.txt
+cmake_install.cmake
+Makefile
