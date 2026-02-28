@@ -2,6 +2,11 @@
 #define SCREEN_H
 #pragma once
 
+/**
+ * @file screen.h
+ * @brief 定义了 Screen 类，用于像素彩色网格操作
+ */
+
 #include "color_char.h"
 #include <vector>
 
