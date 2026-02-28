@@ -105,8 +105,7 @@ public:
   bool operator==(const ColorChar &other) const;
 
   /**
-   * @brief 输出字符的函数。
-   *        该函数会打印带颜色的字符，并在之后重置为默认颜色。
+   * @brief 输出字符的函数。该函数会打印带颜色的字符，并在之后重置为默认颜色。
    */
   void print() const;
 };
