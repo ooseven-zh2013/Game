@@ -21,7 +21,7 @@ jobs:
       run: |
         mkdir -p build  # 添加 -p 参数防止报错
         cd build
-        cmake ..
+        cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
     
     - name: 编译项目
       run:  make -j$(nproc)
