@@ -1,8 +1,11 @@
 #include "common/display/color_char.h"
 #include <iostream>
+#include <locale>
 
 // 注意：此处简化了颜色映射，仅适用于标准ANSI颜色。
 // 实际应用中可能需要处理 DEFAULT (9) 映射到 39/49 的情况。
+
+using std::wstring_convert;
 
 ColorChar::ColorChar(char32_t c, ColorChar::Color fg, ColorChar::Color bg)
     : m_char(c), m_fg_color(fg), m_bg_color(bg) {}
@@ -10,10 +13,10 @@ ColorChar::ColorChar(char32_t c, ColorChar::Color fg, ColorChar::Color bg)
 char32_t &ColorChar::getChar() { return m_char; }
 const char32_t &ColorChar::getChar() const { return m_char; }
 
-ColorChar::ColorChar::Color &ColorChar::getFColor() { return m_fg_color; }
+ColorChar::Color &ColorChar::getFColor() { return m_fg_color; }
 const ColorChar::Color &ColorChar::getFColor() const { return m_fg_color; }
 
-ColorChar::ColorChar::Color &ColorChar::getBColor() { return m_bg_color; }
+ColorChar::Color &ColorChar::getBColor() { return m_bg_color; }
 const ColorChar::Color &ColorChar::getBColor() const { return m_bg_color; }
 
 void ColorChar::setChar(char32_t c) { m_char = c; }
@@ -25,8 +28,8 @@ bool ColorChar::operator==(const ColorChar &other) const {
 }
 
 void ColorChar::print() const {
-  std::wcout << "\033[" << (static_cast<int>(m_fg_color) + 30) << ';' // 前景色码 (30-37, 39 for default)
-             << (static_cast<int>(m_bg_color) + 40) << 'm'            // 背景色码 (40-47, 49 for default)
-             << static_cast<wchar_t>(m_char)                          // 打印字符
-             << "\033[0m";                                            // 重置颜色
+  std::wcout << "\033[;" << (static_cast<int>(m_fg_color) + 30) << ';' // 前景色码
+             << (static_cast<int>(m_bg_color) + 40) << 'm'             // 背景色码
+             << static_cast<wchar_t>(m_char)                           // 打印字符
+             << "\033[0m";                                             // 重置颜色
 }

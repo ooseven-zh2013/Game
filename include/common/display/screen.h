@@ -28,7 +28,7 @@ public:
    * @param n 长
    * @param m 宽
    */
-  Screen(size_t n, size_t m);
+  Screen(size_t n, size_t m, const ColorChar &init = ColorChar());
 
   /**
    * @brief 网格大小

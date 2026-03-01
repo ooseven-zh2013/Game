@@ -2,7 +2,7 @@
 #include <iostream>
 
 // 构造函数实现
-Screen::Screen(size_t n, size_t m) : scr(n, vc(m)) {}
+Screen::Screen(size_t n, size_t m, const ColorChar &init) : scr(n, vc(m, init)) {}
 
 // 网格总大小
 size_t Screen::size() const { return x_size() * y_size(); }
