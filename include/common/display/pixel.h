@@ -3,8 +3,6 @@
 
 #include <cstdint>
 
-namespace display {
-
 /**
  * @brief 颜色枚举类
  *
@@ -42,37 +40,31 @@ public:
    *
    * @param background 背景色，默认为Color::DEFAULT
    */
-  explicit Pixel(Color background = Color::DEFAULT);
+  explicit Pixel(Color bg = Color::DEFAULT);
 
   /**
    * @brief 获取背景色
    *
    * @return Color 当前背景色
    */
-  Color GetBackground() const;
+  Color getBg() const;
 
   /**
    * @brief 设置背景色
    *
-   * @param background 新的背景色
+   * @param bg 新的背景色
    */
-  void SetBackground(Color background);
+  void setBg(Color bg);
 
   /**
-   * @brief 获取字符（始终为空格）
+   * @brief 打印像素
    *
-   * @return char 像素的字符(始终为空格)
    */
-  virtual char getCh() const;
-
-  // TODO 实现print函数
-  virtual void print();
+  virtual void print() const;
 
 protected:
   Color m_background;                      ///< 背景色
   static constexpr char m_character = ' '; ///< 像素的字符始终为空格
 };
-
-} // namespace display
 
 #endif // PIXEL_H

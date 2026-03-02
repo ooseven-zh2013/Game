@@ -3,6 +3,7 @@
 #pragma once
 
 #include "common/display/screen.h"
+
 class Role {
 public:
 protected:

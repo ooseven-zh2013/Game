@@ -2,15 +2,8 @@
 #define SCREEN_H
 #pragma once
 
-/**
- * @file screen.h
- * @brief 定义了 Screen 类，用于像素彩色网格操作
- */
-
 #include "color_char.h"
 #include <vector>
-
-namespace display {
 
 /**
  * @brief 实现一个屏幕类
@@ -18,8 +11,8 @@ namespace display {
  */
 class Screen {
 public:
-  using vc = std::vector<ColorChar>;  ///< 行向量类型别名
-  using vvc = std::vector<vc>;        ///< 屏幕网格类型别名
+  using vc = std::vector<ColorChar>; ///< 行向量类型别名
+  using vvc = std::vector<vc>;       ///< 屏幕网格类型别名
 
   ~Screen() = default;
 
@@ -133,8 +126,7 @@ public:
   void print(bool flushNow = true) const;
 
 protected:
-  vvc scr;  ///< 存储屏幕内容的二维向量
+  vvc scr; ///< 存储屏幕内容的二维向量
 };
-} // display
 
 #endif // SCREEN_H

@@ -2,15 +2,7 @@
 #define COLOR_CHAR_H
 #pragma once
 
-/**
- * @file color_char.h
- * @brief 彩色宽字符的实现
- *
- */
-
 #include "pixel.h"
-
-namespace display {
 
 /**
  * @brief 表示带颜色的字符类
@@ -27,7 +19,7 @@ public:
    * @param fg 前景色，默认为Color::DEFAULT
    * @param bg 背景色，默认为Color::DEFAULT
    */
-  ColorChar(char ch=' ', Color fg = Color::DEFAULT, Color bg = Color::DEFAULT);
+  ColorChar(wchar_t ch = ' ', Color fg = Color::DEFAULT, Color bg = Color::DEFAULT);
 
   /**
    * @brief 获取前景色
@@ -46,25 +38,26 @@ public:
   /**
    * @brief 获取字符
    *
-   * @return char 当前字符
+   * @return wchar_t 当前字符
    */
-  char getCh() const override;
+  wchar_t getCh() const;
 
   /**
    * @brief 设置字符
    *
    * @param ch 新的字符
    */
-  void setCh(char ch);
+  void setCh(wchar_t ch);
 
-  // TODO 实现print函数
-  void print() override;
+  /**
+   * @brief 打印字符
+   *
+   */
+  void print() const override;
 
 private:
-  char m_character;   ///< 字符
-  Color m_foreground; ///< 前景色
+  wchar_t m_character; ///< 字符
+  Color m_foreground;  ///< 前景色
 };
-
-} // namespace display
 
 #endif // COLOR_CHAR_H
