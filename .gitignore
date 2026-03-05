@@ -26,3 +26,6 @@ build/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+
+# 令牌
+token.txt
