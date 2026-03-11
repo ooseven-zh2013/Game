@@ -119,3 +119,11 @@ void Screen::print(bool flushNow) const {
   if (flushNow)
     std::flush(std::wcout);
 }
+
+void Screen::set(const ColorChar &value) {
+  for (auto &rol : scr) {
+    std::fill(rol.begin(), rol.end(), value);
+  }
+}
+
+void Screen::clear() { set(ColorChar()); }

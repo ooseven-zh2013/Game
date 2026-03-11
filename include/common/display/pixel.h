@@ -42,6 +42,8 @@ public:
    */
   explicit Pixel(Color bg = Color::DEFAULT);
 
+  virtual ~Pixel() = default;
+
   /**
    * @brief 获取背景色
    *

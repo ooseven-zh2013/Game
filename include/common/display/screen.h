@@ -125,6 +125,10 @@ public:
    */
   void print(bool flushNow = true) const;
 
+  void set(const ColorChar &value);
+
+  void clear();
+
 protected:
   vvc scr; ///< 存储屏幕内容的二维向量
 };
