@@ -125,8 +125,17 @@ public:
    */
   void print(bool flushNow = true) const;
 
+  /**
+   * @brief 将屏幕中的所有字符设置为value
+   *
+   * @param value 设置的字符
+   */
   void set(const ColorChar &value);
 
+  /**
+   * @brief 将屏幕中的所有字符重置为默认
+   *
+   */
   void clear();
 
 protected:
