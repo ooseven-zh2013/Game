@@ -39,7 +39,7 @@ Info: `Screen`类是一个`vector<vector<ColorChar>>`，用于表示屏幕。
 
 路径: include/common/maths
 
-#### 1.ramdom.hpp
+#### 1.random.hpp
 
 Tips: 该文件为`.hpp`文件，声明与定义合并，不会出现在`src/common/maths/random.cpp`中
 
