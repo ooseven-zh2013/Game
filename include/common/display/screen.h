@@ -118,6 +118,24 @@ public:
   const ColorChar &at(int x, int y) const;
 
   /**
+   * @brief 返回网格中单个字符的引用
+   * @note 调用vector的at接口进行访问越界检查，速度较慢
+   *
+   * @param xy {x, y}第x行第y列
+   * @return ColorChar& 指定位置的ColorChar引用
+   */
+  ColorChar &at(const std::pair<int, int> &xy);
+
+  /**
+   * @brief 返回网格中单个字符的常量引用
+   * @note 调用vector的at接口进行访问越界检查，速度较慢
+   *
+   * @param xy {x, y}第x行第y列
+   * @return const ColorChar& 指定位置的ColorChar常量引用
+   */
+  const ColorChar &at(const std::pair<int, int> &xy) const;
+
+  /**
    * @brief 打印整个网格
    * @warning 请确保你的当前行没有任何字符！
    *
