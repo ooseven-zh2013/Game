@@ -10,6 +10,8 @@ file(GLOB SOURCES
     "src/*.cpp"
     "src/common/*.cpp"
     "src/common/display/*.cpp"
+    "src/common/game/*.cpp"
+    "src/common/game/basic/*.cpp"
     "src/snake/*.cpp"
     "src/snake/role/*.cpp"
 )
