@@ -3,8 +3,7 @@
 #pragma once
 
 #include <vector>
-
-class Role;
+#include "common/game/basic/role.h"
 
 /**
  * @brief 角色列表管理类

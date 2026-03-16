@@ -6,7 +6,7 @@ Apple::Apple(RoleScreen &scr_) : Role(scr_) { moveRandom(); }
 
 void Apple::moveRandom() {
   do {
-    now = {random(static_cast<size_t>(0), scr.x_size() - 1), random(static_cast<size_t>(0), scr.y_size()) - 1};
+    now = {random(static_cast<size_t>(0), scr.x_size() - 1), random(static_cast<size_t>(0), scr.y_size() - 1)};
   } while (scr.at(now).first.getBg() != Color::WHITE);
 }
 

@@ -1,4 +1,5 @@
 #include "common/game/basic/role_list.h"
+#include "common/game/basic/role.h"
 
 RoleList::RoleList(size_t n, size_t m, Role *init) : roles(n, vr(m, init)) {}
 
@@ -40,9 +41,11 @@ void RoleList::clear() { set(nullptr); }
 
 void RoleList::destroy_all() {
   for (auto &row : roles) {
-    for (auto *role : row) {
-      delete role;
-      role = nullptr;
+    for (auto *&role : row) {
+      if (role != nullptr) {
+        delete role;
+        role = nullptr;
+      }
     }
   }
 }
