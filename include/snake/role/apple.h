@@ -22,6 +22,8 @@ public:
    */
   const xy &where() const;
 
+  void kill() override;
+
 private:
   xy now;
 

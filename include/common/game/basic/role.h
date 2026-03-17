@@ -6,6 +6,8 @@
 
 class Role {
 public:
+  virtual void kill() = 0;
+
 protected:
   RoleScreen &scr;
 

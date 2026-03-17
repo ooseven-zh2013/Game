@@ -2,10 +2,10 @@
 #define ROLE_SCREEN_H
 #pragma once
 
+#include "common/display/color_char.h"
 #include <utility>
 #include <vector>
 
-class ColorChar;
 class Role;
 
 /**
@@ -150,6 +150,8 @@ public:
    * @brief 将所有元素重置为默认值
    */
   void clear();
+
+  void print(bool flushNow = true) const;
 
 protected:
   vvE scr; ///< 存储元素指针的二维向量

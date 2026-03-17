@@ -1,5 +1,6 @@
 #include "common/game/basic/role_screen.h"
 #include "common/display/color_char.h"
+#include <iostream>
 
 RoleScreen::RoleScreen(size_t n, size_t m, const Element &init) : scr(n, vE(m, init)) {}
 
@@ -55,5 +56,17 @@ void RoleScreen::clear() {
       elem.first = ColorChar();
       elem.second = nullptr;
     }
+  }
+}
+
+void RoleScreen::print(bool flushNow) const {
+  for (const auto &row : scr) {
+    for (const auto &col : row) {
+      col.first.print();
+    }
+    std::wcout << '\n';
+  }
+  if (flushNow) {
+    std::flush(std::wcout);
   }
 }
