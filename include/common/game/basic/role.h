@@ -6,6 +6,7 @@
 
 class Role {
 public:
+  virtual ~Role() = default;
   virtual void kill() = 0;
 
 protected:
@@ -17,8 +18,6 @@ protected:
    * @param scr_ 绑定的网格
    */
   Role(RoleScreen &scr_);
-
-  virtual ~Role() = default;
 
 private:
 };
