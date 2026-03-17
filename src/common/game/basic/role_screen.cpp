@@ -4,13 +4,7 @@
 
 RoleScreen::RoleScreen(size_t n, size_t m, const Element &init) : scr(n, vE(m, init)) {}
 
-size_t RoleScreen::size() const {
-  size_t total = 0;
-  for (const auto &row : scr) {
-    total += row.size();
-  }
-  return total;
-}
+size_t RoleScreen::size() const { return x_size() * y_size(); }
 
 RoleScreen::vvE &RoleScreen::data() { return scr; }
 
@@ -67,6 +61,6 @@ void RoleScreen::print(bool flushNow) const {
     std::wcout << '\n';
   }
   if (flushNow) {
-    std::flush(std::wcout);
+    std::wcout.flush();
   }
 }

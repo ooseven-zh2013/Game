@@ -12,7 +12,7 @@ void Apple::moveRandom() {
       scr.at(now).first.setBg(Color::WHITE);
     }
   } catch (...) {
-    std::cerr << "未知的错误，转移苹果失败\n";
+    std::wcerr << "未知的错误，转移苹果失败\n";
     std::exit(0);
   }
   size_t cnt = 0;
@@ -21,7 +21,7 @@ void Apple::moveRandom() {
   } while (++cnt <= scr.size() && scr.at(now).first.getBg() != Color::WHITE);
   if (cnt > scr.size()) {
     std::wcout << "没有多余的空间转移苹果，游戏结束\n";
-    std::flush(std::wcout);
+    std::wcout.flush();
     throw std::runtime_error("End-no space");
   }
   scr.at(now).first.setBg(Color::RED);

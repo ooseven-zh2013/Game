@@ -18,6 +18,8 @@ protected:
    */
   Role(RoleScreen &scr_);
 
+  virtual ~Role() = default;
+
 private:
 };
 

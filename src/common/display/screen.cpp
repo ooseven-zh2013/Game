@@ -25,15 +25,11 @@ const Screen::vc &Screen::at(int idx) const { return scr.at(idx); }
 
 ColorChar &Screen::at(int x, int y) { return scr.at(x).at(y); }
 
-ColorChar &Screen::at(const std::pair<int, int>& xy) { return at(xy.first, xy.second); }
+ColorChar &Screen::at(const std::pair<int, int> &xy) { return at(xy.first, xy.second); }
 
-const ColorChar &Screen::at(const std::pair<int, int> &xy) const {
-  return at(xy.first,xy.second);
-}
+const ColorChar &Screen::at(const std::pair<int, int> &xy) const { return at(xy.first, xy.second); }
 
 void Screen::print(bool flushNow) const {
-  if (flushNow)
-    std::flush(std::wcout);
   for (const auto &row : scr) {
     for (const auto &col : row) {
       col.print();
@@ -41,7 +37,7 @@ void Screen::print(bool flushNow) const {
     std::wcout.put('\n');
   }
   if (flushNow)
-    std::flush(std::wcout);
+    std::wcout.flush();
 }
 
 void Screen::set(const ColorChar &value) {
