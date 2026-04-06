@@ -67,11 +67,25 @@ int getche() {
   return ch;
 }
 
+/**
+ * @brief 清空终端屏幕
+ *
+ * 该函数通过执行系统命令 "clear" 来清除终端显示内容，
+ * 将光标移动到屏幕左上角。
+ */
 void clear() { system("clear"); }
 
-void waitKey() {
+/**
+ * 等待用户按键输入
+ *
+ * 该函数会显示提示信息并阻塞等待用户按下任意键，
+ * 然后返回按下的键值。
+ *
+ * @return int 用户按下的键的ASCII码值
+ */
+int waitKey() {
   puts("请按任意键继续...");
-  getch();
+  return getch();
 }
 
 #endif // CONTROL_HPP
