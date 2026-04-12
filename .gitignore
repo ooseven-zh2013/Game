@@ -16,6 +16,7 @@ build/
 *.sublime-project
 *.idea/
 *.vscode/
+*.lingma/
 
 # 临时文件
 *.tmp

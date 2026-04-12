@@ -45,20 +45,21 @@ public:
   inline void forward(bool eatApple = false);
 
   /**
-   * @brief 获取蛇的颜色
-   *
-   * 根据是否为玩家控制返回不同的颜色。
-   *
-   * @return Color 玩家蛇返回BLUE，AI蛇返回GREEN
-   */
-  inline Color getColor() const;
-
-  /**
    * @brief 获取角色类型
    *
    * @return std::string 返回 "Snake"
    */
   std::string type() override;
+
+  /**
+   * @brief 检查蛇是否已死亡
+   *
+   * @return true 蛇已死亡
+   * @return false 蛇仍然存活
+   */
+  inline bool isDeadCheck() const { return isDead; }
+
+  inline size_t score() const { return body.size(); }
 
 private:
   bool isPlayer;                                                     ///< 是否为玩家控制的蛇
@@ -66,7 +67,10 @@ private:
   std::deque<xy> body;                                               ///< 蛇身位置队列（队首为蛇头）
   dir_t dir;                                                         ///< 当前移动方向（0-3对应dirXy数组索引）
   std::vector<xy> apples;                                            ///< 屏幕上所有苹果的坐标列表（每帧更新）
+  Color snakeColor;                                                  ///< 此蛇的颜色
   static constexpr xy dirXy[4] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}; ///< 方向向量数组：上、右、下、左
+  static constexpr int COLOR_COUNT = 16;                             ///< 可用颜色数量（Color枚举值的总数）
+  static bool colorUsed[COLOR_COUNT];                                ///< 颜色占用标记数组（索引对应Color枚举值）
 
   /**
    * @brief 改变蛇的移动方向
@@ -78,22 +82,33 @@ private:
   /**
    * @brief 寻找吃到苹果的最优路径方向
    *
-   * 遍历三个可行方向（排除掉头），评估每个方向的pathSum值，
-   * 选择推荐程度最高的方向。如果是死路则保持原方向。
+   * 使用BFS找到到最近苹果的最短路径，并选择第一步的方向。
+   * 同时检查移动后是否仍有逃生路径以避免进入死路。
    */
   void findPath();
 
   /**
-   * @brief 计算沿某个方向移动的推荐程度评分
+   * @brief 使用BFS寻找从起点到目标点的最短路径
    *
-   * 评分越高表示越不推荐该方向。计算方式为：
-   * 从新位置出发，对所有可行子方向，累加到所有苹果的曼哈顿距离之和。
-   * 死路返回INT_MAX。
-   *
-   * @param newDir 要评估的方向
-   * @return long long 推荐程度评分（越大越不推荐）
+   * @param startX 起点X坐标
+   * @param startY 起点Y坐标
+   * @param targetX 目标X坐标
+   * @param targetY 目标Y坐标
+   * @return std::vector<dir_t> 路径方向序列（空表示不可达）
    */
-  inline long long pathSum(dir_t newDir);
+  std::vector<dir_t> bfsPath(int startX, int startY, int targetX, int targetY);
+
+  /**
+   * @brief 检查从某位置出发是否有足够的可行走空间（逃生路径）
+   *
+   * 使用Flood Fill算法计算从给定位置出发可以到达的格子数量。
+   * 如果可达空间太小，说明可能进入死路。
+   *
+   * @param startX 起点X坐标
+   * @param startY 起点Y坐标
+   * @return int 可达的格子数量
+   */
+  int floodFillCount(int startX, int startY) const;
 
   /**
    * @brief 检查某个位置是否是可行走的（非障碍物）
