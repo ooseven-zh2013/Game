@@ -1,5 +1,6 @@
 #include "snake/role/snake.h"
 #include "common/maths/random.hpp"
+#include <climits>
 
 /**
  * @brief Snake构造函数

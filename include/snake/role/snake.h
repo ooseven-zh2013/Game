@@ -3,7 +3,6 @@
 #pragma once
 
 #include "common/game/basic/role.h"
-#include <climits>
 #include <deque>
 #include <string>
 #include <vector>
