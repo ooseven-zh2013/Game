@@ -97,6 +97,8 @@ int main() {
     usleep(50000);
   }
 
+  waitKey();
+
   // 清理ncurses环境
   clNcu();
 
@@ -109,8 +111,6 @@ int main() {
   std::cout << "========================\n" << '\n';
   std::cout.flush();
 #endif
-  
-  waitKey();
 
   return 0;
 }
