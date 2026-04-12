@@ -1,5 +1,5 @@
 #include "common/display/screen.h"
-#include <iostream>
+#include <ncurses.h>
 
 Screen::Screen(size_t n, size_t m, const ColorChar &init) : scr(n, vc(m, init)) {}
 
@@ -30,14 +30,14 @@ ColorChar &Screen::at(const std::pair<int, int> &xy) { return at(xy.first, xy.se
 const ColorChar &Screen::at(const std::pair<int, int> &xy) const { return at(xy.first, xy.second); }
 
 void Screen::print(bool flushNow) const {
-  for (const auto &row : scr) {
-    for (const auto &col : row) {
-      col.print();
+  for (size_t i = 0; i < scr.size(); ++i) {
+    for (size_t j = 0; j < scr[i].size(); ++j) {
+      move(static_cast<int>(i), static_cast<int>(j));
+      scr[i][j].print();
     }
-    std::wcout.put('\n');
   }
   if (flushNow)
-    std::wcout.flush();
+    refresh();
 }
 
 void Screen::set(const ColorChar &value) {

@@ -1,6 +1,6 @@
 #include "common/game/basic/role_screen.h"
 #include "common/display/color_char.h"
-#include <iostream>
+#include <ncurses.h>
 
 RoleScreen::RoleScreen(size_t n, size_t m, const Element &init) : scr(n, vE(m, init)) {}
 
@@ -54,13 +54,13 @@ void RoleScreen::clear() {
 }
 
 void RoleScreen::print(bool flushNow) const {
-  for (const auto &row : scr) {
-    for (const auto &col : row) {
-      col.first.print();
+  for (size_t i = 0; i < scr.size(); ++i) {
+    for (size_t j = 0; j < scr[i].size(); ++j) {
+      move(static_cast<int>(i), static_cast<int>(j));
+      scr[i][j].first.print();
     }
-    std::wcout << '\n';
   }
   if (flushNow) {
-    std::wcout.flush();
+    refresh();
   }
 }
