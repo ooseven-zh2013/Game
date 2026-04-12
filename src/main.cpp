@@ -109,6 +109,8 @@ int main() {
   std::cout << "========================\n" << '\n';
   std::cout.flush();
 #endif
+  
+  waitKey();
 
   return 0;
 }
