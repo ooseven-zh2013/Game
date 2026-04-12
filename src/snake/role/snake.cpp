@@ -289,15 +289,18 @@ void Snake::update() {
   int nx = body.front().first + dirXy[dir].first;
   int ny = body.front().second + dirXy[dir].second;
 
-  // 检测碰撞
+  // 先检查是否越界或碰到障碍物
+  if (!isWalkable(nx, ny)) {
+    kill();
+    return;
+  }
+
+  // 检测碰撞（此时已确保坐标合法）
   bool eatApple = false;
   if (scr[nx][ny].second != nullptr && scr[nx][ny].second->type() == "Apple") {
     // 吃到苹果
     eatApple = true;
     scr[nx][ny].second->kill();
-  } else if (!isWalkable(nx, ny)) {
-    kill();
-    return;
   }
 
   // 向前移动
