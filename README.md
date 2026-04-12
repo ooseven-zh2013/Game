@@ -228,3 +228,8 @@ make
 6. **随机数使用警告**
    - 请勿对不支持的类型使用 [random](include/common/maths/random.hpp#L50-L59) 函数（例如 `std::string`）
    - 仅支持整型和浮点型，否则会引发未定义行为
+
+7. **代码文档与内联优化**
+   - 所有类和公共函数都有完整的 Doxygen 风格文档注释
+   - 简单的 getter/setter 函数已标记为 `inline` 以提高性能
+   - 虚函数和复杂逻辑保持在 `.cpp` 文件中实现

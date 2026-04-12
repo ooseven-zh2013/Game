@@ -41,7 +41,7 @@ public:
    *
    * @param background 背景色，默认为Color::DEFAULT
    */
-  explicit Pixel(Color bg = Color::DEFAULT);
+  explicit inline Pixel(Color bg = Color::DEFAULT);
 
   virtual ~Pixel() = default;
 
@@ -50,18 +50,19 @@ public:
    *
    * @return Color 当前背景色
    */
-  Color getBg() const;
+  inline Color getBg() const;
 
   /**
    * @brief 设置背景色
    *
    * @param bg 新的背景色
    */
-  void setBg(Color bg);
+  inline void setBg(Color bg);
 
   /**
-   * @brief 打印像素
+   * @brief 打印像素到ncurses屏幕
    *
+   * 使用当前背景色渲染一个空格字符。
    */
   virtual void print() const;
 
@@ -69,5 +70,10 @@ protected:
   Color m_background;                      ///< 背景色
   static constexpr char m_character = ' '; ///< 像素的字符始终为空格
 };
+
+// Inline implementations
+inline Pixel::Pixel(Color bg) : m_background(bg) {}
+inline Color Pixel::getBg() const { return m_background; }
+inline void Pixel::setBg(Color bg) { m_background = bg; }
 
 #endif // PIXEL_H
