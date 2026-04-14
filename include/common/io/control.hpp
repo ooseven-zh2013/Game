@@ -27,6 +27,7 @@ inline void inNcu() {
   // 初始化16个颜色对，背景色对应 Color 枚举值+1
   for (short i = 0; i < 16; ++i) {
     init_pair(static_cast<short>(i + 1), -1, i); // 前景色-1表示使用默认色
+    init_pair(static_cast<short>(i + 17), i, -1);
   }
 }
 

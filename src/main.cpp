@@ -82,18 +82,24 @@ int main() {
     for (const auto &snake : snakes) {
       if (!snake->isDeadCheck()) {
         allDead = false;
-        attron(COLOR_PAIR(static_cast<int>(Color::GREEN) + 1));
-        printw("\n%d号蛇:%zu 存活", ++cnt, snake->score());
-        attroff(COLOR_PAIR(static_cast<int>(Color::GREEN) + 1));
+        attron(COLOR_PAIR(static_cast<int>(snake->getColor()) + 17));
+        printw("\n%d号蛇:%zu ", ++cnt, snake->score());
+        attroff(COLOR_PAIR(static_cast<int>(snake->getColor()) + 17));
+        attron(COLOR_PAIR(static_cast<int>(Color::GREEN) + 17));
+        printw("存活");
+        attroff(COLOR_PAIR(static_cast<int>(Color::GREEN) + 17));
       } else {
-        attron(COLOR_PAIR(static_cast<int>(Color::RED) + 1));
-        printw("\n%d号蛇:%zu 死亡", ++cnt, snake->score());
-        attroff(COLOR_PAIR(static_cast<int>(Color::RED) + 1));
+        attron(COLOR_PAIR(static_cast<int>(snake->getColor()) + 17));
+        printw("\n%d号蛇:%zu ", ++cnt, snake->score());
+        attroff(COLOR_PAIR(static_cast<int>(snake->getColor()) + 17));
+        attron(COLOR_PAIR(static_cast<int>(Color::RED) + 17));
+        printw("死亡");
+        attroff(COLOR_PAIR(static_cast<int>(Color::RED) + 17));
       }
     }
     refresh();
 
-    // 短暂延迟，控制游戏速度（100毫秒）
+    // 短暂延迟，控制游戏速度（50毫秒）
     usleep(50000);
   }
 

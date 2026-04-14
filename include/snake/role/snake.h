@@ -61,6 +61,8 @@ public:
 
   inline size_t score() const { return body.size(); }
 
+  inline Color getColor() const { return snakeColor; }
+
 private:
   bool isPlayer;                                                     ///< 是否为玩家控制的蛇
   bool isDead;                                                       ///< 蛇是否已死亡
