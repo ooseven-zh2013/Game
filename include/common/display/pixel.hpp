@@ -1,8 +1,9 @@
-#ifndef PIXEL_H
-#define PIXEL_H
+#ifndef PIXEL_HPP
+#define PIXEL_HPP
 #pragma once
 
 #include <cstdint>
+#include <ncurses.h>
 
 /**
  * @brief 颜色枚举类
@@ -76,4 +77,11 @@ inline Pixel::Pixel(Color bg) : m_background(bg) {}
 inline Color Pixel::getBg() const { return m_background; }
 inline void Pixel::setBg(Color bg) { m_background = bg; }
 
-#endif // PIXEL_H
+// Implementation from pixel.cpp
+inline void Pixel::print() const {
+  attron(COLOR_PAIR(static_cast<int>(m_background) + 1));
+  addch(' ');
+  attroff(COLOR_PAIR(static_cast<int>(m_background) + 1));
+}
+
+#endif // PIXEL_HPP

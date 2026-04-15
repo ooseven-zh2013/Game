@@ -1,8 +1,9 @@
-#ifndef SCREEN_H
-#define SCREEN_H
+#ifndef SCREEN_HPP
+#define SCREEN_HPP
 #pragma once
 
-#include "color_char.h"
+#include "color_char.hpp"
+#include <ncurses.h>
 #include <vector>
 
 /**
@@ -176,4 +177,22 @@ inline ColorChar &Screen::at(const std::pair<int, int> &xy) { return at(xy.first
 inline const ColorChar &Screen::at(const std::pair<int, int> &xy) const { return at(xy.first, xy.second); }
 inline void Screen::clear() { set(ColorChar()); }
 
-#endif // SCREEN_H
+// Implementation from screen.cpp
+inline void Screen::print(bool flushNow) const {
+  for (size_t i = 0; i < scr.size(); ++i) {
+    for (size_t j = 0; j < scr[i].size(); ++j) {
+      move(static_cast<int>(i), static_cast<int>(j));
+      scr[i][j].print();
+    }
+  }
+  if (flushNow)
+    refresh();
+}
+
+inline void Screen::set(const ColorChar &value) {
+  for (auto &rol : scr) {
+    std::fill(rol.begin(), rol.end(), value);
+  }
+}
+
+#endif // SCREEN_HPP

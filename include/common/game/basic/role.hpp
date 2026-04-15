@@ -1,8 +1,8 @@
-#ifndef ROLE_H
-#define ROLE_H
+#ifndef ROLE_HPP
+#define ROLE_HPP
 #pragma once
 
-#include "common/game/basic/role_screen.h"
+#include "role_screen.hpp"
 #include <string>
 
 /**
@@ -40,9 +40,12 @@ protected:
    *
    * @param scr_ 绑定的角色屏幕引用
    */
-  Role(RoleScreen &scr_);
+  inline Role(RoleScreen &scr_);
 
 private:
 };
 
-#endif // ROLE_H
+// Implementation from role.cpp
+inline Role::Role(RoleScreen &scr_) : scr(scr_) {}
+
+#endif // ROLE_HPP

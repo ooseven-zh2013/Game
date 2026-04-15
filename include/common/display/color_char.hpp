@@ -1,8 +1,9 @@
-#ifndef COLOR_CHAR_H
-#define COLOR_CHAR_H
+#ifndef COLOR_CHAR_HPP
+#define COLOR_CHAR_HPP
 #pragma once
 
-#include "pixel.h"
+#include "pixel.hpp"
+#include <ncurses.h>
 
 /**
  * @brief 表示带颜色的字符类
@@ -68,4 +69,11 @@ inline void ColorChar::setFg(Color foreground) { m_foreground = foreground; }
 inline wchar_t ColorChar::getCh() const { return m_character; }
 inline void ColorChar::setCh(wchar_t ch) { m_character = ch; }
 
-#endif // COLOR_CHAR_H
+// Implementation from color_char.cpp
+inline void ColorChar::print() const {
+  attron(COLOR_PAIR(static_cast<int>(m_background) + 1));
+  addch(static_cast<char>(m_character));
+  attroff(COLOR_PAIR(static_cast<int>(m_background) + 1));
+}
+
+#endif // COLOR_CHAR_HPP

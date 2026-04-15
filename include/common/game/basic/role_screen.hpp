@@ -1,8 +1,9 @@
-#ifndef ROLE_SCREEN_H
-#define ROLE_SCREEN_H
+#ifndef ROLE_SCREEN_HPP
+#define ROLE_SCREEN_HPP
 #pragma once
 
-#include "common/display/color_char.h"
+#include "common/display/color_char.hpp"
+#include <ncurses.h>
 #include <utility>
 #include <vector>
 
@@ -188,4 +189,34 @@ inline const RoleScreen::Element &RoleScreen::at(const std::pair<int, int> &xy) 
   return scr.at(xy.first).at(xy.second);
 }
 
-#endif // ROLE_SCREEN_H
+// Implementation from role_screen.cpp
+inline void RoleScreen::set(const Element &value) {
+  for (auto &row : scr) {
+    for (auto &elem : row) {
+      elem = value;
+    }
+  }
+}
+
+inline void RoleScreen::clear() {
+  for (auto &row : scr) {
+    for (auto &elem : row) {
+      elem.first = ColorChar();
+      elem.second = nullptr;
+    }
+  }
+}
+
+inline void RoleScreen::print(bool flushNow) const {
+  for (size_t i = 0; i < scr.size(); ++i) {
+    for (size_t j = 0; j < scr[i].size(); ++j) {
+      move(static_cast<int>(i), static_cast<int>(j));
+      scr[i][j].first.print();
+    }
+  }
+  if (flushNow) {
+    refresh();
+  }
+}
+
+#endif // ROLE_SCREEN_HPP

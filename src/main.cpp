@@ -1,7 +1,7 @@
-#include "common/game/basic/role_screen.h"
+#include "common/game/basic/role_screen.hpp"
 #include "common/io/control.hpp"
-#include "snake/role/apple.h"
-#include "snake/role/snake.h"
+#include "snake/role/apple.hpp"
+#include "snake/role/snake.hpp"
 #include <memory>
 #include <ncurses.h>
 #include <unistd.h>
@@ -20,14 +20,15 @@
  * @return int 程序退出码
  */
 int main() {
+
   // 初始化ncurses环境
-  inNcu();
+  NcuInit NcuInitSpace;
 
   // 创建角色屏幕（30行 x 60列）
-  constexpr size_t ROWS = 30;
-  constexpr size_t COLS = 60;
+  constexpr size_t Rows = 30;
+  constexpr size_t Cols = 60;
   RoleScreen::Element defaultElem(ColorChar(' ', Color::DEFAULT, Color::WHITE), nullptr);
-  RoleScreen scr(ROWS, COLS, defaultElem);
+  RoleScreen scr(Rows, Cols, defaultElem);
 
   // 创建4条AI蛇（非玩家控制）
   std::vector<std::unique_ptr<Snake>> snakes;
@@ -82,31 +83,55 @@ int main() {
     for (const auto &snake : snakes) {
       if (!snake->isDeadCheck()) {
         allDead = false;
-        attron(COLOR_PAIR(static_cast<int>(snake->getColor()) + 17));
+        attron(COLOR_PAIR(static_cast<int>(snake->getColor()) + 33));
         printw("\n%d号蛇:%zu ", ++cnt, snake->score());
-        attroff(COLOR_PAIR(static_cast<int>(snake->getColor()) + 17));
-        attron(COLOR_PAIR(static_cast<int>(Color::GREEN) + 17));
+        attroff(COLOR_PAIR(static_cast<int>(snake->getColor()) + 33));
+        attron(COLOR_PAIR(static_cast<int>(Color::GREEN) + 1));
         printw("存活");
-        attroff(COLOR_PAIR(static_cast<int>(Color::GREEN) + 17));
+        attroff(COLOR_PAIR(static_cast<int>(Color::GREEN) + 1));
       } else {
-        attron(COLOR_PAIR(static_cast<int>(snake->getColor()) + 17));
+        attron(COLOR_PAIR(static_cast<int>(snake->getColor()) + 33));
         printw("\n%d号蛇:%zu ", ++cnt, snake->score());
-        attroff(COLOR_PAIR(static_cast<int>(snake->getColor()) + 17));
-        attron(COLOR_PAIR(static_cast<int>(Color::RED) + 17));
+        attroff(COLOR_PAIR(static_cast<int>(snake->getColor()) + 33));
+        attron(COLOR_PAIR(static_cast<int>(Color::RED) + 1));
         printw("死亡");
-        attroff(COLOR_PAIR(static_cast<int>(Color::RED) + 17));
+        attroff(COLOR_PAIR(static_cast<int>(Color::RED) + 1));
       }
     }
+    eraseLine(static_cast<int>(Rows + snakes.size()));
+    mvprintw(static_cast<int>(Rows + snakes.size()), 0, "按[Esc]键暂停游戏");
     refresh();
+
+    timeout(50);
+    if (getch() == 27) {
+      timeout(-1);
+      eraseLine(static_cast<int>(Rows + snakes.size()));
+      mvprintw(static_cast<int>(Rows + snakes.size()), 0, "游戏暂停中,按任意键继续...");
+      eraseLine(static_cast<int>(Rows + snakes.size()) + 1);
+      mvprintw(static_cast<int>(Rows + snakes.size()) + 1, 0, "按[Esc]键退出游戏");
+
+#ifdef DEBUG
+
+      // TODO 实现debug控制台，通过snake/debug.hpp
+      
+#endif
+
+      if (getch() == 27) {
+        break;
+      }
+    }
+    timeout(-1);
+    eraseLine(static_cast<int>(Rows + snakes.size()) + 1);
 
     // 短暂延迟，控制游戏速度（50毫秒）
     usleep(50000);
   }
 
-  waitKey();
-
-  // 清理ncurses环境
-  clNcu();
+  eraseLine(static_cast<int>(Rows + snakes.size()));
+  eraseLine(static_cast<int>(Rows + snakes.size()) + 1);
+  eraseLine(LINES - 2);
+  mvprintw(LINES - 2, 0, "游戏结束");
+  waitKey("退出");
 
 #ifdef DEBUG
   // 输出性能统计
@@ -117,6 +142,4 @@ int main() {
   std::cout << "========================\n" << '\n';
   std::cout.flush();
 #endif
-
-  return 0;
 }
