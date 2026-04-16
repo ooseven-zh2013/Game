@@ -33,6 +33,7 @@ std::pair<std::string, std::vector<std::string>> debug(int col) {
   move(0, col);
   refresh();
   std::string command;
+  // TODO 实现用$表示光标所在位置
   int temp = getch();
   eraseLine(0, col);
   while (temp != '\n') {

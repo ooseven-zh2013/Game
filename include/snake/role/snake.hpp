@@ -105,7 +105,18 @@ public:
    */
   inline const char *getColorName() const;
 
+#ifdef DEBUG
+
+  inline void edit(int delta) { add = delta; }
+
+#endif // DEBUG
+
 private:
+#ifdef DEBUG
+
+  int add;
+
+#endif                                                               // DEBUG
   bool isPlayer;                                                     ///< 是否为玩家控制的蛇
   bool isDead;                                                       ///< 蛇是否已死亡
   std::deque<xy> body;                                               ///< 蛇身位置队列（队首为蛇头）
@@ -193,6 +204,12 @@ inline Snake::Snake(RoleScreen &scr_, bool isPlayer_) : Role(scr_), isPlayer(isP
 
   body.emplace_back(x, y);
   scr[x][y].first.setBg(snakeColor);
+
+#ifdef DEBUG
+
+  add = 0;
+
+#endif // DEBUG
 }
 
 inline void Snake::kill() {
@@ -214,14 +231,27 @@ inline bool Snake::isWalkable(int x, int y) const {
   }
   // 检查是否有其他蛇的身体阻挡
   if (scr[x][y].second != nullptr && scr[x][y].second->type() == "Snake") {
-    // 如果是自己蛇的身体，需要检查是否是蛇尾（蛇尾在移动时会移开）
-    if (scr[x][y].second == this) {
-      // 检查该位置是否是自己的蛇尾
-      const auto &tail = body.back();
-      if (x == tail.first && y == tail.second) {
-        return true; // 蛇尾位置可行走（移动时会移开）
+
+#ifdef DEBUG
+
+    if (add <= 0) {
+
+#endif // DEBUG
+
+      // 如果是自己蛇的身体，需要检查是否是蛇尾（蛇尾在移动时会移开）
+      if (scr[x][y].second == this) {
+        // 检查该位置是否是自己的蛇尾
+        const auto &tail = body.back();
+        if (x == tail.first && y == tail.second) {
+          return true; // 蛇尾位置可行走（移动时会移开）
+        }
       }
+
+#ifdef DEBUG
     }
+
+#endif // DEBUG
+
     return false; // 其他蛇或自己身体的其他部分都不可行走
   }
   return true;
@@ -419,19 +449,39 @@ inline void Snake::forward(bool eatApple) {
   int oldHeadX = body.front().first;
   int oldHeadY = body.front().second;
 
-  if (!eatApple) {
-    const auto &[lx, ly] = body.back();
-    scr[lx][ly].first.setBg(Color::WHITE);
-    scr[lx][ly].second = nullptr;
-    body.pop_back();
-  }
+#ifdef DEBUG
 
-  // 添加新蛇头
-  int nx = oldHeadX + dirXy[dir].first;
-  int ny = oldHeadY + dirXy[dir].second;
-  scr[nx][ny].first.setBg(snakeColor);
-  scr[nx][ny].second = this;
-  body.emplace_front(nx, ny);
+  if (add > 0) {
+    add -= !eatApple;
+  } else {
+
+#endif // DEBUG
+
+    if (!eatApple) {
+      const auto &[lx, ly] = body.back();
+      scr[lx][ly].first.setBg(Color::WHITE);
+      scr[lx][ly].second = nullptr;
+      body.pop_back();
+    }
+
+#ifdef DEBUG
+  }
+  if (add < 0) {
+    ++add;
+  } else {
+
+#endif // DEBUG
+
+    // 添加新蛇头
+    int nx = oldHeadX + dirXy[dir].first;
+    int ny = oldHeadY + dirXy[dir].second;
+    scr[nx][ny].first.setBg(snakeColor);
+    scr[nx][ny].second = this;
+    body.emplace_front(nx, ny);
+
+#ifdef DEBUG
+  }
+#endif // DEBUG
 }
 
 inline std::string Snake::type() { return "Snake"; }

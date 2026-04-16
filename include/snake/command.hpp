@@ -361,10 +361,11 @@ void init() {
     return;
   isInit = true;
   ctr.insert("help", "显示帮助信息");
-  ctr.insert("info", "查询蛇类信息", {"编号"});
-  ctr.insert("kill", "强制杀死蛇类", {"编号"});
   ctr.insert("continue", "退出控制台");
   ctr.insert("exit", "结束程序");
+  ctr.insert("info", "查询蛇类信息", {"编号"});
+  ctr.insert("kill", "强制杀死蛇类", {"编号"});
+  ctr.insert("edit", "修改蛇类属性", {"编号", "属性", "修改值"});
 }
 
 /**

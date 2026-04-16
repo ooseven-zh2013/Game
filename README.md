@@ -193,7 +193,8 @@ Tips: 所有路径相对于项目根目录
 
 ## 项目结构
 
-```
+```txt
+
 Game
 ├── include/
 │   ├── common/
@@ -269,7 +270,7 @@ Game
 
 - **文件级注释**: 每个头文件都有 `@file`、`@brief`、`@author`、`@date` 等完整信息
 - **类文档**: 所有类都有 `@brief` 和详细描述，说明设计目的和使用场景
-- **函数文档**: 
+- **函数文档**:
   - 公共方法包含 `@brief`、详细描述、`@param`、`@return`、`@throws`（如适用）
   - 私有/保护方法包含必要的实现细节说明
   - 简单的 getter/setter 保持简洁但信息丰富
@@ -281,12 +282,14 @@ Game
 #### inline 关键字
 
 **应用于：**
+
 - 简单的 getter/setter 方法（1-3行）
 - 频繁使用的简单工具函数
 - 在头文件中定义的模板函数
 - 紧密循环中调用的函数
 
 **不应用于：**
+
 - 虚函数（inline无效）
 - 大型函数（>10-15行）
 - 具有复杂逻辑的函数
@@ -294,11 +297,13 @@ Game
 #### const 关键字
 
 **应用于：**
+
 - 不修改成员变量的成员函数
 - 不修改参数的引用参数
 - 返回值不需要修改的情况
 
 **示例：**
+
 ```cpp
 inline int getValue() const { return value; }  // ✓ 正确
 void setValue(int val) const { value = val; }  // ✗ 错误
@@ -307,18 +312,22 @@ void setValue(int val) const { value = val; }  // ✗ 错误
 #### 引用和常量引用
 
 **const & (常量引用):**
+
 - 大型对象作为只读参数（避免拷贝开销）
 - STL容器（vector, string, map等）
 - 自定义类或结构体
 
 **& (非常量引用):**
+
 - 需要修改的原地参数（输出参数）
 
 **值传递:**
+
 - 基本类型（int, double, bool, char等）
 - 小型POD类型
 
 **示例：**
+
 ```cpp
 void processString(const std::string& text);  // ✓ 大对象用const引用
 void setValue(int value);                      // ✓ 基本类型用值传递
@@ -328,13 +337,16 @@ void setFlag(const bool& flag);                // ✗ 小类型不应使用const
 #### static 关键字
 
 **静态成员变量：**
+
 - 所有实例共享的数据（计数器、配置等）
 
 **静态成员函数：**
+
 - 不访问任何非静态成员的函数
 - 工具函数或工厂方法
 
 **示例：**
+
 ```cpp
 class Counter {
     static inline int getCount() { return count; }  // 静态函数

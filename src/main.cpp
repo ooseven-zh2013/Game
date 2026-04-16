@@ -9,6 +9,8 @@
  * @date 2026
  */
 
+#define DEBUG
+
 #include "common/game/basic/role_screen.hpp"
 #include "common/io/control.hpp"
 #include "snake/role/apple.hpp"
@@ -18,10 +20,11 @@
 #include <unistd.h>
 #include <vector>
 
-#define DEBUG
 #ifdef DEBUG
+
 #include "snake/debug.hpp"
-#endif
+
+#endif // DEBUG
 
 /**
  * @brief 贪吃蛇游戏主函数
@@ -118,7 +121,9 @@ int main() {
       mvprintw(static_cast<int>(Rows + snakes.size()) + 1, 0, "按[Esc]键退出游戏");
 
 #ifdef DEBUG
+
       // 调试模式：显示调试控制台
+      // TODO 实现防御性编程
       bool shouldContinue = true;
       while (true) {
         const auto com = debug(Cols);
@@ -161,7 +166,23 @@ int main() {
           } else {
             mvprintw(infoLine++, static_cast<int>(Cols), "错误: 请提供蛇编号");
           }
-        }
+        } else if (com.first == "edit") {
+          if (com.second.size() < 3) {
+            mvprintw(infoLine++, Cols, "错误：参数过少");
+          } else {
+            int num = std::stoi(com.second[0]) - 1;
+            std::string mode = com.second[1];
+            int val = std::stoi(com.second[2]);
+            if (-val >= static_cast<int>(snakes[num]->score())) {
+              mvprintw(infoLine++, Cols, "错误：不允许长度小于1的蛇类出现");
+            }
+            if (mode == "l") {
+              snakes[num]->edit(val);
+            } else {
+              mvprintw(infoLine++, Cols, "错误：不支持的属性");
+            } // TODO 实现方向修改
+          }
+        } // TODO 实现让蛇活过来
 
         mvprintw(infoLine, static_cast<int>(Cols), "按任意键继续");
         getch();
@@ -176,11 +197,13 @@ int main() {
       }
 
 #else
+
       // 非调试模式：简单暂停
       if (getch() == 27) {
         break; // 再次按Esc退出游戏
       }
-#endif
+
+#endif // DEBUG
     }
     // 恢复输入模式并清除额外行
     timeout(-1);
