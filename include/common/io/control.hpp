@@ -18,12 +18,24 @@ public:
   /**
    * @brief 构造函数，自动初始化ncurses环境
    */
-  NcuInit() { inNcu(); }
+  NcuInit() {
+    static bool isInit = false;
+    if (isInit)
+      return;
+    inNcu();
+    isInit = true;
+  }
 
   /**
    * @brief 析构函数，自动清理ncurses环境
    */
-  ~NcuInit() { clNcu(); }
+  ~NcuInit() {
+    static bool isInit = true;
+    if (!isInit)
+      return;
+    clNcu();
+    isInit = false;
+  }
 
 private:
   /**

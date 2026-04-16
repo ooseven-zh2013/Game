@@ -1,3 +1,11 @@
+/**
+ * @file color_char.hpp
+ * @brief 带颜色的字符类
+ *
+ * ColorChar继承自Pixel，扩展了前景色和字符内容，
+ * 是游戏中最基本的可显示单元。
+ */
+
 #ifndef COLOR_CHAR_HPP
 #define COLOR_CHAR_HPP
 #pragma once
@@ -10,6 +18,7 @@
  *
  * ColorChar类表示一个具有前景色、背景色和字符的单元格，
  * 它继承自Pixel类并扩展了字符和前景色功能。
+ * 用于在屏幕上渲染单个字符及其颜色属性。
  */
 class ColorChar : public Pixel {
 public:

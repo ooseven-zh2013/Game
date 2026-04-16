@@ -1,3 +1,11 @@
+/**
+ * @file apple.hpp
+ * @brief 苹果角色类
+ *
+ * Apple是游戏中的食物元素，蛇吃到后会增长。
+ * 苹果会在屏幕上随机生成在空白位置。
+ */
+
 #ifndef APPLE_HPP
 #define APPLE_HPP
 #pragma once
@@ -10,6 +18,13 @@
 #include <ncurses.h>
 #include <string>
 
+/**
+ * @brief 苹果角色类
+ *
+ * Apple继承自Role，代表游戏中的食物元素。
+ * 当蛇吃到苹果时，苹果会重新随机出现在屏幕的空白位置。
+ * 苹果显示为红色背景的空格字符。
+ */
 class Apple : public Role {
 public:
   using xy = std::pair<int, int>;

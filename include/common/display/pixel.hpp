@@ -1,3 +1,11 @@
+/**
+ * @file pixel.hpp
+ * @brief 像素和颜色定义
+ *
+ * 定义了游戏中的基本显示单元 - Pixel（像素）和 Color（颜色枚举）。
+ * Pixel是所有可显示元素的基类，提供背景色管理功能。
+ */
+
 #ifndef PIXEL_HPP
 #define PIXEL_HPP
 #pragma once
@@ -8,7 +16,11 @@
 /**
  * @brief 颜色枚举类
  *
- * 定义了可用的颜色选项，包括默认色、基本色和亮色
+ * 定义了游戏中可用的所有颜色选项，包括标准色和亮色。
+ * 这些颜色与 ncurses 的颜色对映射关系为：
+ *   - 背景色: i + 1 (i = 0-15)
+ *   - 前景色: i + 17 (i = 0-15)
+ *   - 反差色: i + 33 (i = 0-15)
  */
 enum class Color : uint8_t {
   DEFAULT = 0,    ///< 默认颜色
@@ -27,13 +39,14 @@ enum class Color : uint8_t {
   BRIGHT_BLUE,    ///< 亮蓝色  (12)
   BRIGHT_MAGENTA, ///< 亮品红色 (13)
   BRIGHT_CYAN,    ///< 亮青色  (14)
-  BRIGHT_WHITE    ///< 亮白色  (15)
+  BRIGHT_WHITE    ///< 亮白色 (15)
 };
 
 /**
  * @brief 像素基类
  *
- * Pixel类表示一个具有背景色的基本像素单元，字符固定为空格
+ * Pixel类表示一个具有背景色的基本显示单元，字符固定为空格。
+ * 它是ColorChar的父类，提供了基础的渲染能力。
  */
 class Pixel {
 public:

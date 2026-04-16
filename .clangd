@@ -8,7 +8,8 @@ CompileFlags:
     - "-std=c++23"       # 使用C++23标准进行编译
     - "-lstdc++exp"      # 链接实验性C++标准库扩展
     - "-I/home/ooseven/Project/Game/include"      # 添加头文件目录
-  Remove: ["-Werror"]   # 移除将所有警告作为错误的选项，避免编译中断
+  Remove:
+    - "-Werror"   # 移除将所有警告作为错误的选项，避免编译中断
   Compiler: "g++"     # 指定具体的编译器路径
 
 # 索引设置 - 控制代码索引行为
@@ -19,12 +20,13 @@ Index:
 Diagnostics:
   ClangTidy:             # Clang-Tidy 静态分析工具配置
     # 添加一些基础的检查项
-    Add: [
-      "bugprone-*",          # 检测潜在的逻辑错误（如死代码、可疑的拷贝操作）
-      "performance-*",       # 性能优化建议（如不必要的拷贝、移动语义使用）
-      "readability-container-size-empty-*", # 建议使用 empty() 代替 size() == 0
-      "readability-implicit-bool-conversion-*" # 警告隐式布尔转换可能导致的问题
-    ]
+    Add:
+    -  "bugprone-*"          # 检测潜在的逻辑错误（如死代码、可疑的拷贝操作）
+    -  "performance-*"       # 性能优化建议（如不必要的拷贝、移动语义使用）
+    -  "readability-container-size-empty-*" # 建议使用 empty() 代替 size() == 0
+    -  "readability-implicit-bool-conversion-*" # 警告隐式布尔转换可能导致的问题
+    Remove:
+    -  "bugprone-easily-swappable-parameters"  # 禁用参数容易交换的警告
  
 # 代码提示设置部分 - 在编辑器中显示辅助信息
 InlayHints:

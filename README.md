@@ -2,7 +2,9 @@
 
 ## 一个新手也可以自定义自己的游戏的项目，内置了一些基础小游戏（基础小游戏还在开发中）
 
-本项目采用Header-only设计模式，所有头文件都包含了完整的实现代码，无需单独的.cpp文件（除了main.cpp）。这种设计简化了编译流程，提高了代码的可维护性。
+本项目采用 Header-only 设计模式，所有头文件都包含了完整的实现代码，无需单独的.cpp文件（除了main.cpp）。这种设计简化了编译流程，提高了代码的可维护性。
+
+项目遵循 Doxygen 文档标准，所有类和函数都有完整的注释，并优化使用了 `inline`、`const`、引用和 `static` 关键字。
 
 ## 系统要求与依赖
 
@@ -127,67 +129,96 @@ Tips: 所有路径相对于项目根目录
 
 ### 贪吃蛇游戏模块
 
-路径：`include/snake/role`
+路径：`include/snake`
 
-#### 1. apple.h
+#### 1. command.hpp - 命令管理系统
 
-提供了 [Apple](include/snake/role/apple.h#L6-L32) 类
+提供了基于 Trie 树的智能命令查找系统：
 
-- 继承自 [Role](include/common/game/basic/role.h#L6-L19) 类
-- 表示贪吃蛇游戏中的苹果
-- 具有随机移动功能
+- **Command类**: 存储命令描述和参数列表
+- **CommandTree类**:
+  - 使用 Trie 树结构高效存储命令
+  - 支持模糊匹配和自动补全
+  - 使用 LCS（最长公共子序列）算法进行智能排序
+  - 大小写不敏感匹配
+- **全局实例 `ctr`**: 预定义的命令树实例
+- **辅助函数**:
+  - `init()`: 初始化预定义命令
+  - `hanCom()`: 解析命令字符串为命令名和参数列表
 
-#### 2. snake.h
+#### 2. debug.hpp - 调试控制台
 
-提供了 [Snake](include/snake/role/snake.h#L8-L33) 类
+提供交互式调试界面（仅在 DEBUG 模式下启用）：
 
-- 继承自 [Role](include/common/game/basic/role.h#L6-L19) 类
-- 表示贪吃蛇游戏中的蛇
+- 实时命令输入和退格删除
+- Tab 键自动补全命令
+- 显示匹配命令的描述和参数提示
+- 支持的调试命令：
+  - `help`: 显示帮助信息
+  - `info <编号>`: 查询指定蛇的信息
+  - `kill <编号>`: 强制杀死指定蛇
+  - `continue`: 退出调试控制台
+  - `exit`: 结束程序
+
+#### 3. role/apple.hpp - 苹果角色类
+
+提供了 [Apple](include/snake/role/apple.hpp) 类：
+
+- 继承自 [Role](include/common/game/basic/role.hpp) 类
+- 表示贪吃蛇游戏中的食物元素
+- 被蛇吃到后会自动移动到新的随机位置
+- 显示为红色背景
+
+#### 4. role/snake.hpp - 蛇角色类
+
+提供了 [Snake](include/snake/role/snake.hpp) 类：
+
+- 继承自 [Role](include/common/game/basic/role.hpp) 类
 - 支持玩家控制和 AI 控制两种模式
-- 主要成员函数：
+- **AI 算法特点**:
+  - 使用 BFS（广度优先搜索）寻找最短路径到苹果
+  - 使用 Flood Fill 算法检查逃生空间，避免进入死路
+  - 优先级策略：生存 > 吃苹果
+- **主要成员函数**:
   - `kill()`: 蛇死亡时调用，将蛇身变为灰色
   - `update()`: 更新蛇的状态和屏幕显示
+  - `forward()`: 向前移动一步
+  - `findPath()`: AI 寻路逻辑
+  - `bfsPath()`: BFS 路径搜索
+  - `floodFillCount()`: 计算可达空间大小
 - 内部使用 `std::deque` 存储蛇身位置
+- 每条蛇有独立的颜色，自动分配不重复
 
 ---
 
 ## 项目结构
 
-```txt
+```
 Game
 ├── include/
-│ ├── common/
-│ │ ├── display/ # 显示模块
-│ │ │ ├── pixel.h # 像素基类
-│ │ │ ├── color_char.h # 彩色字符类
-│ │ │ └── screen.h # 屏幕类
-│ │ ├── io/ # 输入控制模块
-│ │ │ └── control.hpp # ncurses 控制接口
-│ │ ├── maths/ # 数学模块
-│ │ │ └── random.hpp # 随机数生成器
-│ │ └── game/ # 游戏基础模块
-│ │ └── basic/
-│ │ ├── role.h # 角色基类
-│ │ └── role_screen.h # 角色屏幕类
-│ └── snake/ # 贪吃蛇游戏模块
-│ └── role/
-│ ├── apple.h # 苹果类
-│ └── snake.h # 蛇类
+│   ├── common/
+│   │   ├── display/              # 显示模块
+│   │   │   ├── pixel.hpp         # 像素基类和颜色枚举
+│   │   │   ├── color_char.hpp    # 彩色字符类
+│   │   │   └── screen.hpp        # 屏幕管理类
+│   │   ├── io/                   # 输入控制模块
+│   │   │   └── control.hpp       # ncurses 控制接口和 RAII 管理
+│   │   ├── maths/                # 数学模块
+│   │   │   └── random.hpp        # 随机数生成器
+│   │   └── game/                 # 游戏基础模块
+│   │       └── basic/
+│   │           ├── role.hpp      # 角色基类
+│   │           └── role_screen.hpp # 角色屏幕类
+│   └── snake/                    # 贪吃蛇游戏模块
+│       ├── command.hpp           # 命令管理系统（Trie树）
+│       ├── debug.hpp             # 调试控制台
+│       └── role/
+│           ├── apple.hpp         # 苹果类
+│           └── snake.hpp         # 蛇类（含AI算法）
 ├── src/
-│ ├── common/
-│ │ ├── display/ # 显示模块实现
-│ │ │ ├── pixel.cpp
-│ │ │ ├── color_char.cpp
-│ │ │ └── screen.cpp
-│ │ └── game/
-│ │ └── basic/ # 游戏基础模块实现
-│ │ ├── role.cpp
-│ │ └── role_screen.cpp
-│ └── snake/
-│ └── role/ # 贪吃蛇游戏模块实现
-│ ├── apple.cpp
-│ └── snake.cpp
-└── main.cpp # 主程序入口
+│   └── main.cpp                  # 主程序入口
+├── CMakeLists.txt                # CMake 构建配置
+└── README.md                     # 项目文档
 ```
 
 ## 项目架构
@@ -230,14 +261,86 @@ Game
 - **Apple类**: 游戏中的苹果角色
 - **Snake类**: 游戏中的蛇角色，支持AI和玩家控制
 
-## 代码文档标准
+## 代码文档与优化标准
 
-本项目遵循Doxygen文档标准：
+本项目遵循严格的 Doxygen 文档标准和 C++ 最佳实践：
 
-- 所有类和公共方法都有全面的文档注释
-- 简单的访问器函数标记为`inline`以提高性能
-- 成员变量使用行内注释（`///<`）
-- 虚函数和复杂逻辑保持在头文件中实现（Header-only设计）
+### 文档注释规范
+
+- **文件级注释**: 每个头文件都有 `@file`、`@brief`、`@author`、`@date` 等完整信息
+- **类文档**: 所有类都有 `@brief` 和详细描述，说明设计目的和使用场景
+- **函数文档**: 
+  - 公共方法包含 `@brief`、详细描述、`@param`、`@return`、`@throws`（如适用）
+  - 私有/保护方法包含必要的实现细节说明
+  - 简单的 getter/setter 保持简洁但信息丰富
+- **成员变量**: 使用行内注释 (`///<`) 说明用途
+- **语言**: 统一使用中文注释
+
+### 关键字优化策略
+
+#### inline 关键字
+
+**应用于：**
+- 简单的 getter/setter 方法（1-3行）
+- 频繁使用的简单工具函数
+- 在头文件中定义的模板函数
+- 紧密循环中调用的函数
+
+**不应用于：**
+- 虚函数（inline无效）
+- 大型函数（>10-15行）
+- 具有复杂逻辑的函数
+
+#### const 关键字
+
+**应用于：**
+- 不修改成员变量的成员函数
+- 不修改参数的引用参数
+- 返回值不需要修改的情况
+
+**示例：**
+```cpp
+inline int getValue() const { return value; }  // ✓ 正确
+void setValue(int val) const { value = val; }  // ✗ 错误
+```
+
+#### 引用和常量引用
+
+**const & (常量引用):**
+- 大型对象作为只读参数（避免拷贝开销）
+- STL容器（vector, string, map等）
+- 自定义类或结构体
+
+**& (非常量引用):**
+- 需要修改的原地参数（输出参数）
+
+**值传递:**
+- 基本类型（int, double, bool, char等）
+- 小型POD类型
+
+**示例：**
+```cpp
+void processString(const std::string& text);  // ✓ 大对象用const引用
+void setValue(int value);                      // ✓ 基本类型用值传递
+void setFlag(const bool& flag);                // ✗ 小类型不应使用const引用
+```
+
+#### static 关键字
+
+**静态成员变量：**
+- 所有实例共享的数据（计数器、配置等）
+
+**静态成员函数：**
+- 不访问任何非静态成员的函数
+- 工具函数或工厂方法
+
+**示例：**
+```cpp
+class Counter {
+    static inline int getCount() { return count; }  // 静态函数
+    static int count;                                // 静态成员
+};
+```
 
 ## 编译与运行
 

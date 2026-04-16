@@ -1,3 +1,11 @@
+/**
+ * @file snake.hpp
+ * @brief 蛇角色类
+ *
+ * Snake是游戏的核心角色，支持玩家控制和AI自动控制。
+ * AI使用BFS寻路算法和Flood Fill安全检查来实现智能移动。
+ */
+
 #ifndef SNAKE_HPP
 #define SNAKE_HPP
 #pragma once
@@ -11,6 +19,19 @@
 #include <string>
 #include <vector>
 
+/**
+ * @brief 蛇角色类
+ *
+ * Snake继承自Role，是游戏的主要角色。
+ * 支持两种模式：
+ *   - 玩家控制模式（isPlayer = true）：等待用户输入
+ *   - AI控制模式（isPlayer = false）：自动寻路和避障
+ *
+ * AI算法特点：
+ *   - 使用BFS寻找最短路径到苹果
+ *   - 使用Flood Fill检查逃生空间避免死路
+ *   - 优先保证生存，其次追求吃苹果
+ */
 class Snake : Role {
 public:
   using xy = std::pair<int, int>;
@@ -76,6 +97,13 @@ public:
    * @return Color 蛇的颜色
    */
   inline Color getColor() const { return snakeColor; }
+
+  /**
+   * @brief 获取蛇颜色的字符串表示
+   *
+   * @return const char* 颜色名称字符串
+   */
+  inline const char *getColorName() const;
 
 private:
   bool isPlayer;                                                     ///< 是否为玩家控制的蛇
@@ -407,5 +435,13 @@ inline void Snake::forward(bool eatApple) {
 }
 
 inline std::string Snake::type() { return "Snake"; }
+
+inline const char *Snake::getColorName() const {
+  static const char *colorNames[] = {"DEFAULT",     "BLACK",        "RED",           "GREEN",       "YELLOW",
+                                     "BLUE",        "MAGENTA",      "CYAN",          "WHITE",       "BRIGHT_BLACK",
+                                     "BRIGHT_RED",  "BRIGHT_GREEN", "BRIGHT_YELLOW", "BRIGHT_BLUE", "BRIGHT_MAGENTA",
+                                     "BRIGHT_CYAN", "BRIGHT_WHITE"};
+  return colorNames[static_cast<int>(snakeColor) + 1];
+}
 
 #endif // SNAKE_HPP

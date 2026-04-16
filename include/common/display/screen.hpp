@@ -1,3 +1,11 @@
+/**
+ * @file screen.hpp
+ * @brief 屏幕显示管理类
+ *
+ * Screen类管理一个二维的ColorChar网格，提供高效的屏幕渲染和管理功能。
+ * 支持快速访问、批量设置和整体刷新操作。
+ */
+
 #ifndef SCREEN_HPP
 #define SCREEN_HPP
 #pragma once
@@ -8,6 +16,10 @@
 
 /**
  * @brief 实现一个屏幕类
+ *
+ * Screen管理一个二维的ColorChar网格，用于游戏画面的渲染。
+ * 提供多种访问方式（operator[]无检查快速访问，at()带检查安全访问）。
+ *
  * @note 所有下标从0开始，描述中所有的快慢皆是相较而言
  */
 class Screen {
