@@ -130,22 +130,37 @@ int main() {
           shouldContinue = false;
           break;
         } else if (com.first == "info") {
+          // 显示蛇的信息
           if (com.second.empty()) {
+            // 没有提供编号，显示所有蛇的信息
             for (size_t snakeIndex = 0; snakeIndex < snakes.size(); snakeIndex++) {
               mvprintw(infoLine++, static_cast<int>(Cols), "编号:%zu", snakeIndex + 1);
               mvprintw(infoLine++, static_cast<int>(Cols), "长度:%zu", snakes[snakeIndex]->score());
               mvprintw(infoLine++, static_cast<int>(Cols), "颜色:%s", snakes[snakeIndex]->getColorName());
               infoLine++;
             }
+          } else {
+            // 显示指定蛇的信息
+            const int snakeIndex = std::stoi(com.second[0]) - 1;
+            if (snakeIndex >= 0 && snakeIndex < static_cast<int>(snakes.size())) {
+              mvprintw(infoLine++, static_cast<int>(Cols), "长度:%zu", snakes[snakeIndex]->score());
+              mvprintw(infoLine++, static_cast<int>(Cols), "颜色:%s", snakes[snakeIndex]->getColorName());
+            } else {
+              mvprintw(infoLine++, static_cast<int>(Cols), "错误: 无效的蛇编号");
+            }
           }
-          // 显示指定蛇的信息
-          const int snakeIndex = std::stoi(com.second[0]) - 1;
-          mvprintw(infoLine++, static_cast<int>(Cols), "长度:%zu", snakes[snakeIndex]->score());
-          mvprintw(infoLine++, static_cast<int>(Cols), "颜色:%s", snakes[snakeIndex]->getColorName());
         } else if (com.first == "kill") {
           // 强制杀死指定蛇
-          const int snakeIndex = std::stoi(com.second[0]) - 1;
-          snakes[snakeIndex]->kill();
+          if (!com.second.empty()) {
+            const int snakeIndex = std::stoi(com.second[0]) - 1;
+            if (snakeIndex >= 0 && snakeIndex < static_cast<int>(snakes.size())) {
+              snakes[snakeIndex]->kill();
+            } else {
+              mvprintw(infoLine++, static_cast<int>(Cols), "错误: 无效的蛇编号");
+            }
+          } else {
+            mvprintw(infoLine++, static_cast<int>(Cols), "错误: 请提供蛇编号");
+          }
         }
 
         mvprintw(infoLine, static_cast<int>(Cols), "按任意键继续");
