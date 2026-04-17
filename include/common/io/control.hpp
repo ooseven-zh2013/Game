@@ -82,7 +82,12 @@ private:
  * @param line_ 要清除的行号
  * @param col_ 起始列号，默认为0（从行首开始）
  */
-inline void eraseLine(int line_, int col_ = 0) { mvprintw(line_, col_, "%s", std::string(COLS - col_, ' ').c_str()); }
+inline void eraseLine(int line_, int col_ = 0) {
+  move(line_, col_);
+  for (int i = col_; i < COLS; ++i) {
+    addch(' ');
+  }
+}
 
 /**
  * @brief 等待用户按键输入

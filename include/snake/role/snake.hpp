@@ -107,14 +107,33 @@ public:
 
 #ifdef DEBUG
 
-  inline void edit(int delta) { add = delta; }
+  inline void edit(int delta) { add += delta; }
+
+  inline int getEdit() const { return add; }
+
+  /**
+   * @brief 强制设置蛇的移动方向（调试用）
+   *
+   * 在下次update时，蛇会强制转向到指定的方向。
+   * 方向值：0=上, 1=右, 2=下, 3=左
+   *
+   * @param newDir 新的方向（0-3）
+   */
+  inline void turn(dir_t newDir) {
+    if (newDir >= 0 && newDir < 4) {
+      forceTurn = true;
+      forcedDir = newDir;
+    }
+  }
 
 #endif // DEBUG
 
 private:
 #ifdef DEBUG
 
-  int add;
+  int add;         ///< 调试模式下的长度调整值
+  bool forceTurn;  ///< 是否强制转向标志
+  dir_t forcedDir; ///< 强制转向的目标方向
 
 #endif                                                               // DEBUG
   bool isPlayer;                                                     ///< 是否为玩家控制的蛇
@@ -208,6 +227,8 @@ inline Snake::Snake(RoleScreen &scr_, bool isPlayer_) : Role(scr_), isPlayer(isP
 #ifdef DEBUG
 
   add = 0;
+  forceTurn = false;
+  forcedDir = 0;
 
 #endif // DEBUG
 }
@@ -398,6 +419,14 @@ inline void Snake::update() {
   if (isDead) {
     return;
   }
+
+#ifdef DEBUG
+  // 如果有强制转向指令，优先执行
+  if (forceTurn) {
+    dir = forcedDir;
+    forceTurn = false; // 重置标志
+  }
+#endif // DEBUG
 
   // 模拟玩家用眼找苹果的过程：遍历整张屏幕，记录所有苹果的位置
   apples.clear();

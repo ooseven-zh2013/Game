@@ -1,83 +1,38 @@
 /**
  * @file debug.hpp
- * @brief 调试控制台
+ * @brief 调试命令初始化（贪吃蛇专用）
  *
- * 提供交互式调试界面，支持命令输入、自动补全和实时提示。
- * 仅在DEBUG模式下编译启用。
+ * 提供贪吃蛇游戏的调试命令初始化功能。
  */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef SNAKE_DEBUG_H
+#define SNAKE_DEBUG_H
 #pragma once
 
-#include "common/io/control.hpp"
-#include "snake/command.hpp"
+#include "common/debug/debug.hpp"
 
 /**
- * @brief 调试函数 - 显示交互式调试控制台
+ * @brief 初始化贪吃蛇调试命令
  *
- * 提供一个类似命令行的界面，支持：
- *   - 实时命令输入和退格删除
- *   - Tab键自动补全命令
- *   - 显示匹配命令的描述和参数提示
- *   - 回车确认输入
- *
- * @param col 调试控制台的起始列位置（行固定为0）
- * @return std::pair<std::string, std::vector<std::string>>
- *         第一个元素为命令名，第二个元素为参数列表
+ * 注册所有可用的调试命令到全局命令树 ctr 中。
+ * 此函数是幂等的，多次调用只会初始化一次。
  */
-std::pair<std::string, std::vector<std::string>> debug(int col) {
-  init();
-  eraseLine(0, col);
-  mvprintw(0, col, "请键入调试指令");
-  move(0, col);
-  refresh();
-  std::string command;
-  // TODO 实现用$表示光标所在位置
-  int temp = getch();
-  eraseLine(0, col);
-  while (temp != '\n') {
-    if (temp == '\b' || temp == 263) {
-      if (!command.empty()) {
-        command.pop_back();
-        mvprintw(0, static_cast<int>(command.size() + col), " ");
-        move(0, static_cast<int>(command.size() + col));
-      }
-    } else if (temp == '\t') {
-      auto result = ctr.find(hanCom(command).first);
-      if (result.second) {
-        command = result.first; // 使用返回的命令字符串
-      }
-      eraseLine(0, col);
-      mvprintw(0, col, "%s", command.c_str());
-      refresh();
-      move(0, static_cast<int>(command.size() + col));
-    } else if (std::isprint(temp)) {
-      command += static_cast<char>(temp);
-      mvprintw(0, static_cast<int>(command.size() + col - 1), "%c", temp);
-      refresh();
-    }
-    auto result = ctr.find(hanCom(command).first);
-    if (result.second) {
-      mvprintw(1, col, "%s", result.first.c_str());
-      for (const auto &par : result.second->parameters) {
-        printw(" [%s]", par.c_str());
-      }
-      mvprintw(2, col, "%s", result.second->description.c_str());
-    } else {
-      eraseLine(1, col);
-      eraseLine(2, col);
-      move(0, static_cast<int>(command.size() + col));
-    }
-    temp = getch();
-  }
-  eraseLine(0, col);
-  eraseLine(1, col);
-  eraseLine(2, col);
-  auto result = hanCom(command);
-  std::string com = result.first;
-  std::vector<std::string> pars = result.second;
-  return {com, pars};
+void init() {
+  static bool isInit = false;
+  if (isInit)
+    return;
+  isInit = true;
+  ctr.insert("help", "显示帮助信息");
+  ctr.insert("info", "查询蛇类信息", {"编号"});
+  ctr.insert("kill", "强制杀死蛇类", {"编号"});
+  ctr.insert("continue", "退出控制台");
+  ctr.insert("exit", "结束程序");
+  ctr.insert("edit", "编辑蛇的属性", {"编号", "属性(l=长度,d=方向)", "值"});
 }
 
-#endif // DEBUG_H
+auto snakeDebug(int col) {
+  init();
+  return debug(col);
+}
+
+#endif // SNAKE_DEBUG_H

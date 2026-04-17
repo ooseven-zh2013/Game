@@ -123,10 +123,9 @@ int main() {
 #ifdef DEBUG
 
       // 调试模式：显示调试控制台
-      // TODO 实现防御性编程
       bool shouldContinue = true;
       while (true) {
-        const auto com = debug(Cols);
+        const auto com = snakeDebug(Cols);
         int infoLine = 0;
 
         if (com.first == "continue") {
@@ -142,6 +141,7 @@ int main() {
               mvprintw(infoLine++, static_cast<int>(Cols), "编号:%zu", snakeIndex + 1);
               mvprintw(infoLine++, static_cast<int>(Cols), "长度:%zu", snakes[snakeIndex]->score());
               mvprintw(infoLine++, static_cast<int>(Cols), "颜色:%s", snakes[snakeIndex]->getColorName());
+              mvprintw(infoLine++, static_cast<int>(Cols), "待增加长度:%d", snakes[snakeIndex]->getEdit());
               infoLine++;
             }
           } else {
@@ -172,15 +172,55 @@ int main() {
           } else {
             int num = std::stoi(com.second[0]) - 1;
             std::string mode = com.second[1];
-            int val = std::stoi(com.second[2]);
-            if (-val >= static_cast<int>(snakes[num]->score())) {
-              mvprintw(infoLine++, Cols, "错误：不允许长度小于1的蛇类出现");
-            }
             if (mode == "l") {
+              int val = std::stoi(com.second[2]);
+              if (-val >= static_cast<int>(snakes[num]->score())) {
+                mvprintw(infoLine++, Cols, "错误：不允许长度小于1的蛇类出现");
+              }
+              // 调整蛇的长度
               snakes[num]->edit(val);
+              mvprintw(infoLine++, Cols, "已设置蛇%d的长度调整为:%d", num + 1, val);
+            } else if (mode == "d") {
+              // TODO 修复强制转向功能（update函数）
+              // TODO 实现转向累加
+              // TODO 运行 /code-document-helper
+              // 强制转向：支持 u(上), d(下), l(左), r(右) 或数字 0-3
+              std::string dirStr = com.second[2];
+              Snake::dir_t newDir = 0;
+              bool validDir = true;
+
+              if (dirStr == "u" || dirStr == "U") {
+                newDir = 0; // 上
+              } else if (dirStr == "r" || dirStr == "R") {
+                newDir = 1; // 右
+              } else if (dirStr == "d" || dirStr == "D") {
+                newDir = 2; // 下
+              } else if (dirStr == "l" || dirStr == "L") {
+                newDir = 3; // 左
+              } else {
+                // 尝试解析为数字
+                try {
+                  int dirVal = std::stoi(dirStr);
+                  if (dirVal >= 0 && dirVal <= 3) {
+                    newDir = static_cast<Snake::dir_t>(dirVal);
+                  } else {
+                    validDir = false;
+                  }
+                } catch (...) {
+                  validDir = false;
+                }
+              }
+
+              if (validDir) {
+                snakes[num]->turn(newDir);
+                const char *dirNames[] = {"上", "右", "下", "左"};
+                mvprintw(infoLine++, Cols, "已设置蛇%d强制转向:%s", num + 1, dirNames[newDir]);
+              } else {
+                mvprintw(infoLine++, Cols, "错误：方向值必须为 u/d/l/r 或 0-3");
+              }
             } else {
-              mvprintw(infoLine++, Cols, "错误：不支持的属性");
-            } // TODO 实现方向修改
+              mvprintw(infoLine++, Cols, "错误：不支持的属性 (支持: l=长度, d=方向)");
+            }
           }
         } // TODO 实现让蛇活过来
 
