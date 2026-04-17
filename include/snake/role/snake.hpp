@@ -425,26 +425,31 @@ inline void Snake::update() {
   if (forceTurn) {
     dir = forcedDir;
     forceTurn = false; // 重置标志
-  }
+  } else {
 #endif // DEBUG
 
-  // 模拟玩家用眼找苹果的过程：遍历整张屏幕，记录所有苹果的位置
-  apples.clear();
-  for (int row = 0; row < static_cast<int>(scr.x_size()); ++row) {
-    for (int col = 0; col < static_cast<int>(scr.y_size()); ++col) {
-      if (scr[row][col].second != nullptr && scr[row][col].second->type() == "Apple") {
-        apples.emplace_back(row, col);
+    // 模拟玩家用眼找苹果的过程：遍历整张屏幕，记录所有苹果的位置
+    apples.clear();
+    for (int row = 0; row < static_cast<int>(scr.x_size()); ++row) {
+      for (int col = 0; col < static_cast<int>(scr.y_size()); ++col) {
+        if (scr[row][col].second != nullptr && scr[row][col].second->type() == "Apple") {
+          apples.emplace_back(row, col);
+        }
       }
     }
+
+    // 处理蛇的移动逻辑：区分玩家控制和AI控制
+    if (isPlayer) {
+      // TODO 玩家控制移动
+    } else {
+      // AI控制移动：自动寻找最优路径
+      findPath();
+    }
+
+#ifdef DEBUG
   }
 
-  // 处理蛇的移动逻辑：区分玩家控制和AI控制
-  if (isPlayer) {
-    // TODO 玩家控制移动
-  } else {
-    // AI控制移动：自动寻找最优路径
-    findPath();
-  }
+#endif
 
   // 计算新蛇头位置
   int nx = body.front().first + dirXy[dir].first;

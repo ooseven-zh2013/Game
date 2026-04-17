@@ -135,6 +135,7 @@ int main() {
           break;
         } else if (com.first == "info") {
           // 显示蛇的信息
+          // TODO 显示强制转向
           if (com.second.empty()) {
             // 没有提供编号，显示所有蛇的信息
             for (size_t snakeIndex = 0; snakeIndex < snakes.size(); snakeIndex++) {
@@ -181,8 +182,6 @@ int main() {
               snakes[num]->edit(val);
               mvprintw(infoLine++, Cols, "已设置蛇%d的长度调整为:%d", num + 1, val);
             } else if (mode == "d") {
-              // TODO 修复强制转向功能（update函数）
-              // TODO 实现转向累加
               // TODO 运行 /code-document-helper
               // 强制转向：支持 u(上), d(下), l(左), r(右) 或数字 0-3
               std::string dirStr = com.second[2];
