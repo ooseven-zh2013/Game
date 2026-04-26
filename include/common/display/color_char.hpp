@@ -79,7 +79,7 @@ inline wchar_t ColorChar::getCh() const { return m_character; }
 inline void ColorChar::setCh(wchar_t ch) { m_character = ch; }
 
 // Implementation from color_char.cpp
-inline void ColorChar::print() const {
+void ColorChar::print() const {
   attron(COLOR_PAIR(static_cast<int>(m_background) + 1));
   addch(static_cast<char>(m_character));
   attroff(COLOR_PAIR(static_cast<int>(m_background) + 1));

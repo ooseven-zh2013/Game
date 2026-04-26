@@ -46,7 +46,7 @@ private:
    *   1=BLACK, 2=RED, 3=GREEN, 4=YELLOW, 5=BLUE, 6=MAGENTA, 7=CYAN, 8=WHITE,
    *   9=BRIGHT_BLACK, 10=BRIGHT_RED, ..., 16=BRIGHT_WHITE
    */
-  inline void inNcu() {
+  void inNcu() {
     setlocale(LC_ALL, "");
     initscr();
     start_color();
@@ -68,7 +68,7 @@ private:
   /**
    * @brief 清理 ncurses 环境并恢复终端设置
    */
-  inline void clNcu() {
+  void clNcu() {
     curs_set(1);
     endwin();
   }

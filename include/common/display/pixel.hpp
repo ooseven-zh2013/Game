@@ -91,7 +91,7 @@ inline Color Pixel::getBg() const { return m_background; }
 inline void Pixel::setBg(Color bg) { m_background = bg; }
 
 // Implementation from pixel.cpp
-inline void Pixel::print() const {
+void Pixel::print() const {
   attron(COLOR_PAIR(static_cast<int>(m_background) + 1));
   addch(' ');
   attroff(COLOR_PAIR(static_cast<int>(m_background) + 1));

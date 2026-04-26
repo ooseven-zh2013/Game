@@ -44,6 +44,10 @@ std::pair<std::string, std::vector<std::string>> debug(int col) {
         mvaddch(0, static_cast<int>(command.size() + col), '$');
         move(0, static_cast<int>(command.size() + col));
       }
+      if (command.empty()) {
+        eraseLine(1, col);
+        eraseLine(2, col);
+      }
     } else if (temp == '\t') {
       auto result = ctr.find(hanCom(command).first);
       if (result.second) {
@@ -63,10 +67,12 @@ std::pair<std::string, std::vector<std::string>> debug(int col) {
     // 命令补全
     auto result = ctr.find(hanCom(command).first);
     if (result.second) {
+      eraseLine(1, col);
       mvprintw(1, col, "%s", result.first.c_str());
       for (const auto &par : result.second->parameters) {
         printw(" [%s]", par.c_str());
       }
+      eraseLine(2, col);
       mvprintw(2, col, "%s", result.second->description.c_str());
     } else {
       eraseLine(1, col);

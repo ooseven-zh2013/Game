@@ -32,7 +32,7 @@ inline float random(float l, float r) {
     throw std::invalid_argument("下限l必须小于上限r");
   }
 
-  std::random_device rd;
+  static std::random_device rd;
   static std::mt19937 gen(rd());
   std::uniform_real_distribution<float> dis(l, r);
   return dis(gen);
@@ -54,7 +54,7 @@ inline double random(double l, double r) {
     throw std::invalid_argument("下限l必须小于上限r");
   }
 
-  std::random_device rd;
+  static std::random_device rd;
   static std::mt19937 gen(rd());
   std::uniform_real_distribution<double> dis(l, r);
   return dis(gen);
@@ -76,7 +76,7 @@ inline long double random(long double l, long double r) {
     throw std::invalid_argument("下限l必须小于上限r");
   }
 
-  std::random_device rd;
+  static std::random_device rd;
   static std::mt19937 gen(rd());
   std::uniform_real_distribution<long double> dis(l, r);
   return dis(gen);
@@ -100,7 +100,7 @@ template <typename T> inline T random(const T &l, const T &r) {
     throw std::invalid_argument("下限l必须小于等于上限r");
   }
 
-  std::random_device rd;
+  static std::random_device rd;
   static std::mt19937 gen(rd());
   std::uniform_int_distribution<T> dis(l, r);
   return dis(gen);

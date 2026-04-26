@@ -52,6 +52,15 @@ public:
   void kill() override;
 
   /**
+   * @brief 复活已死亡的蛇
+   *
+   * 原地复活蛇，保持原有的长度、位置和方向不变。
+   * 如果复活位置被其他蛇或障碍物占据，则复活失败，蛇保持死亡状态。
+   * 只能在蛇处于死亡状态时调用。
+   */
+  void respawn();
+
+  /**
    * @brief 更新蛇的状态
    *
    * 如果蛇已死亡则直接返回。否则处理移动逻辑并更新屏幕显示。
@@ -112,17 +121,33 @@ public:
   inline int getEdit() const { return add; }
 
   /**
+   * @brief 获取待转向方向字符串（调试用）
+   *
+   * @return const char* 方向字符串（←↓→↑None）
+   */
+  inline const char *getForcedDirName() const {
+    if (!forceTurn) {
+      return "None";
+    }
+    static const char *dirNames[] = {"←", "↓", "→", "↑"};
+    return dirNames[forcedDir];
+  }
+
+  /**
    * @brief 强制设置蛇的移动方向（调试用）
    *
    * 在下次update时，蛇会强制转向到指定的方向。
-   * 方向值：0=上, 1=右, 2=下, 3=左
+   * 方向值：0=左, 1=下, 2=右, 3=上
    *
-   * @param newDir 新的方向（0-3）
+   * @param newDir 新的方向（0-3），-1表示取消强制转向
    */
-  inline void turn(dir_t newDir) {
+  inline void turn(int newDir) {
+    if (newDir == -1) {
+      forceTurn = false;
+    }
     if (newDir >= 0 && newDir < 4) {
       forceTurn = true;
-      forcedDir = newDir;
+      forcedDir = static_cast<dir_t>(newDir);
     }
   }
 
@@ -142,7 +167,7 @@ private:
   dir_t dir;                                                         ///< 当前移动方向（0-3对应dirXy数组索引）
   std::vector<xy> apples;                                            ///< 屏幕上所有苹果的坐标列表（每帧更新）
   Color snakeColor;                                                  ///< 此蛇的颜色
-  static constexpr xy dirXy[4] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}; ///< 方向向量数组：上、右、下、左
+  static constexpr xy dirXy[4] = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}}; ///< 方向向量数组：索引0=上, 1=右, 2=下, 3=左
   static constexpr int COLOR_COUNT = 16;                             ///< 可用颜色数量（Color枚举值的总数）
   static bool colorUsed[COLOR_COUNT];                                ///< 颜色占用标记数组（索引对应Color枚举值）
 
@@ -239,6 +264,49 @@ inline void Snake::kill() {
     scr.at(pos.first, pos.second).first.setBg(Color::BRIGHT_BLACK);
     scr.at(pos.first, pos.second).second = nullptr; // 清除角色指针，释放格子占用
   }
+}
+
+inline void Snake::respawn() {
+  if (!isDead) {
+    return; // 如果蛇还活着，不需要复活
+  }
+
+  // 保存原有的蛇身位置和方向
+  auto savedBody = body;
+  dir_t savedDir = dir;
+
+  // 重置死亡状态
+  isDead = false;
+
+  // 恢复蛇身到屏幕上
+  for (const auto &pos : savedBody) {
+    // 检查位置是否仍然可用（没有被其他蛇或障碍物占据）
+    if (pos.first >= 0 && pos.first < static_cast<int>(scr.x_size()) && pos.second >= 0 &&
+        pos.second < static_cast<int>(scr.y_size()) && scr[pos.first][pos.second].second == nullptr) {
+      scr[pos.first][pos.second].first.setBg(snakeColor);
+      scr[pos.first][pos.second].second = this;
+    } else {
+      // 如果位置被占用，复活失败，蛇立即死亡
+      isDead = true;
+      // 清除已放置的部分
+      for (const auto &placedPos : body) {
+        scr.at(placedPos.first, placedPos.second).first.setBg(Color::BRIGHT_BLACK);
+        scr.at(placedPos.first, placedPos.second).second = nullptr;
+      }
+      body.clear();
+      return;
+    }
+  }
+
+  // 恢复蛇身数据
+  body = savedBody;
+  dir = savedDir;
+
+#ifdef DEBUG
+  add = 0;
+  forceTurn = false;
+  forcedDir = 0;
+#endif // DEBUG
 }
 
 inline bool Snake::isWalkable(int x, int y) const {
@@ -424,7 +492,6 @@ inline void Snake::update() {
   // 如果有强制转向指令，优先执行
   if (forceTurn) {
     dir = forcedDir;
-    forceTurn = false; // 重置标志
   } else {
 #endif // DEBUG
 

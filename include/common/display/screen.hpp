@@ -190,7 +190,7 @@ inline const ColorChar &Screen::at(const std::pair<int, int> &xy) const { return
 inline void Screen::clear() { set(ColorChar()); }
 
 // Implementation from screen.cpp
-inline void Screen::print(bool flushNow) const {
+void Screen::print(bool flushNow) const {
   for (size_t i = 0; i < scr.size(); ++i) {
     for (size_t j = 0; j < scr[i].size(); ++j) {
       move(static_cast<int>(i), static_cast<int>(j));
@@ -201,7 +201,7 @@ inline void Screen::print(bool flushNow) const {
     refresh();
 }
 
-inline void Screen::set(const ColorChar &value) {
+void Screen::set(const ColorChar &value) {
   for (auto &rol : scr) {
     std::fill(rol.begin(), rol.end(), value);
   }
